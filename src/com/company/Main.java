@@ -5,23 +5,48 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static int WholePart(double number){
-        return (int)number;
+    public static void CorrectInput(){
+        ;
     }
 
-    public static double FractionalPart(double number){
-        String strNumber = String.valueOf(number);            // представление вещественного числа в виде строки
-        String subStr[] = new String[2];                      // масиив для хранения целой и дробной частец
-        subStr = strNumber.split("\\.");                // делим строковое представление вещественного числа на целую и дробную части по разделителю "точка"
-        return Double.parseDouble("0." + subStr[1]);       // добавляем к дробной части числа в строковом представлении 0. и перобразуем обратно в вещественное
+    // преобразуем символ согласно таблице ascii в числовое значение, необходимое для расчётов
+    public static int AsciiFunc(char item){
+        int newItem = 0;
+        if ((int)item >= 48 && (int)item <= 57) {              // преобразование чисел
+            newItem = item - 48;
+        }
+        else if ((int)item >= 65 && (int)item <= 90) {         // преобразование больших букв
+            newItem = item - 48 - 7;
+        }
+        else if((int)item >= 97 && (int)item <= 122) {         // преобразование маленьких букв
+            newItem = item - 87;
+        }
+
+        return newItem;
+    }
+
+    public static double ToDec(String number, int base){
+        double decNumber = 0.0;                                    // число преобразованное в десятичную СС
+        String subStr [] = number.split("\\.");              // разделение числа на целую и дробную части
+        char[] charNumberArr = subStr[0].toCharArray();            // превращаем целую часть числа в символьный массив
+
+        for(int i = 0; i < charNumberArr.length; i++){             // преобразуем целую часть числа
+            decNumber += AsciiFunc(charNumberArr[i]) * Math.pow(base, charNumberArr.length - i - 1);
+        }
+        charNumberArr = subStr[1].toCharArray();                   // превращаем дробную часть числа в символьный массив
+        for(int i = 0; i < charNumberArr.length; i++){             // преобразуем дробную часть числа
+            decNumber += AsciiFunc(charNumberArr[i]) * Math.pow(base, (-1 + i * (-1)));
+        }
+
+        return decNumber;
     }
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        Scanner inNumber = new Scanner(System.in).useLocale(Locale.US); // для работы с "."
+        Scanner in = new Scanner(System.in).useLocale(Locale.US);
 
-        double number = inNumber.nextDouble();
+        String number = in.nextLine();
+        int base = in.nextInt();
 
-        System.out.println(WholePart(number) + " - whole part " + '\n' + FractionalPart(number) + " - fractional part ");
+        System.out.println(ToDec(number, base));
     }
 }
