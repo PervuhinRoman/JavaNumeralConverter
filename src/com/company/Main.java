@@ -1,26 +1,33 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
 
     // проверка на корректность введённых СС и числа для перевода
-    public static void CorrectInput(String number, int base, int newBase){
+    public static byte[] InputCheck(String number, int base, int newBase){
+        byte[] errorsList = new byte[3];
         if(base <= 1 || base > 36){
-            System.out.println("Incorrect input!");
+            errorsList[0] = 1;
+            // System.out.println("Incorrect input!");
         }
         else if (newBase <= 1 || newBase > 36) {
-            System.out.println("Incorrect input!");
+            // System.out.println("Incorrect input!");
+            errorsList[1] = 2;
         }
         else {
             char [] charNumberArr = number.toCharArray();
             for(int i = 0; i < charNumberArr.length; i++){
                 if(AsciiFuncToNumbers(charNumberArr[i]) > base){
-                    System.out.println("Incorrect input!");
+                    // System.out.println("Incorrect input!");
+                    errorsList[2] = 3;
                 }
             }
         }
+
+        return errorsList;
     }
 
     // преобразуем символ согласно таблице ascii в числовое значение, необходимое для расчётов
