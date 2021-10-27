@@ -1,28 +1,24 @@
 package com.company;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
 
     // проверка на корректность введённых СС и числа для перевода
-    public static byte[] InputCheck(String number, int base, int newBase){
-        byte[] errorsList = new byte[3];
-        if(base <= 1 || base > 36){
-            errorsList[0] = 1;
-            // System.out.println("Incorrect input!");
+    public static String InputCheck(String number, int base, int newBase){
+        String errorsList = "";
+        if(base <= 1 || base > 36){                                    // проверка основания исходной СС
+            errorsList += '1';
         }
-        else if (newBase <= 1 || newBase > 36) {
-            // System.out.println("Incorrect input!");
-            errorsList[1] = 2;
+        else if (newBase <= 1 || newBase > 36) {                       // проверка нового основания СС
+            errorsList += '2';
         }
-        else {
+        else {                                                         // проверка числа
             char [] charNumberArr = number.toCharArray();
             for(int i = 0; i < charNumberArr.length; i++){
                 if(AsciiFuncToNumbers(charNumberArr[i]) > base){
-                    // System.out.println("Incorrect input!");
-                    errorsList[2] = 3;
+                    errorsList += '3';
                 }
             }
         }
@@ -61,7 +57,7 @@ public class Main {
 
     public static double ToDec(String number, int base){
         double decNumber = 0.0;                                    // число преобразованное в десятичную СС
-        String subStr [] = number.split("\\.");              // разделение числа на целую и дробную части
+        String subStr [] = number.split("\\.", 2);      // разделение числа на целую и дробную части
         char[] charNumberArr = subStr[0].toCharArray();            // превращаем целую часть числа в символьный массив
 
         for(int i = 0; i < charNumberArr.length; i++){             // преобразуем целую часть числа
@@ -111,13 +107,50 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in).useLocale(Locale.US);
+        Scanner in = new Scanner(System.in).useLocale(Locale.US); // стандартный сканер и функция для обработки "."
 
-        String number = in.nextLine() + ".0";
-        int base = in.nextInt();
-        int newBase = in.nextInt();
+        while(true){
+            System.out.print("Enter the number: ");
+            String number = in.nextLine() + ".0";                 // решает проблему, если введено НЕ дробное число
+            System.out.print("From base: ");
+            int base = in.nextInt();
+            System.out.print("To base: ");
+            int newBase = in.nextInt();
+            in.nextLine();
 
-        System.out.println(ToDec(number, base));
-        System.out.println(FromDecToNewBase(ToDec(number, base), newBase));
+            InputCheck(number, base, newBase);                    // проверка ввода на корректность
+            if(InputCheck(number, base, newBase).length() > 0){   // описание ошибки ввода
+                for(int i = 0; i < InputCheck(number, base, newBase).length(); i++) {
+                    switch (InputCheck(number, base, newBase).charAt(i)) {
+                        case '1':
+                            System.out.println("Неверно введена исходная система счисления");
+                            break;
+                        case '2':
+                            System.out.println("Неверно введена новая система счисления");
+                            break;
+                        case '3':
+                            System.out.println("Недопустимое значение исходного числа");
+                            break;
+                    }
+                }
+
+                System.out.print("Try again (1) or help (2): ");
+                String act = in.nextLine();
+                switch (act){
+                    case "1":
+                        System.out.println();
+                        break;
+                    case "2":                                     // вывод теории о СС
+                        System.out.println();
+                        System.out.println(" * Все возможные СС 2-36. Ограничения связаны с всего лишь 10-ю цифрами и английским алфавитом в 26 символов, он просто закончился");
+                        System.out.println(" * В водимом числе не должно быть составляющих, которые бы были больше самой СС (например 'A' не может быть в 6-ти ричной системе т.к. A = 10, а максимальное значение 6-ти ричной СС - 5)");
+                        System.out.println();
+                }
+            }
+            else {
+                System.out.println(FromDecToNewBase(ToDec(number, base), newBase) + " in " + newBase);  // вывод преобразованного числа
+                System.out.println();
+            }
+        }
     }
 }
