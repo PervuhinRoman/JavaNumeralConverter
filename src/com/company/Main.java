@@ -97,6 +97,10 @@ public class Main {
             wholePartOfNewNumber += subArr[i];
         }
 
+        if(fractionalPart == 0){
+            fractionalPartOfNewNumber = "";
+        }
+
         while(fractionalPart != 0){                 // преобразование дробной части числа
             fractionalPart *= newBase;
             fractionalPartOfNewNumber += AsciiFuncToSymbols((int)fractionalPart);
