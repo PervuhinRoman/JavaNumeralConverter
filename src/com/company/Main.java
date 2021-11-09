@@ -58,11 +58,12 @@ public class Main {
     public static double ToDec(String number, int base){
         double decNumber = 0.0;                                    // число преобразованное в десятичную СС
         String subStr [] = number.split("\\.", 2);      // разделение числа на целую и дробную части
-        char[] charNumberArr = subStr[0].toCharArray();            // превращаем целую часть числа в символьный массив
 
+        char[] charNumberArr = subStr[0].toCharArray();            // превращаем целую часть числа в символьный массив
         for(int i = 0; i < charNumberArr.length; i++){             // преобразуем целую часть числа
             decNumber += AsciiFuncToNumbers(charNumberArr[i]) * Math.pow(base, charNumberArr.length - i - 1);
         }
+
         charNumberArr = subStr[1].toCharArray();                   // превращаем дробную часть числа в символьный массив
         for(int i = 0; i < charNumberArr.length; i++){             // преобразуем дробную часть числа
             decNumber += AsciiFuncToNumbers(charNumberArr[i]) * Math.pow(base, (-1 + i * (-1)));
@@ -116,6 +117,15 @@ public class Main {
         while(true){
             System.out.print("Enter the number: ");
             String number = in.nextLine() + ".0";                 // решает проблему, если введено НЕ дробное число
+            if(number.indexOf(",") != -1){                        // решает проблему если введена "," вместо "."
+                char [] subNum = number.toCharArray();
+                subNum[number.indexOf(",")] = '.';
+                number = "";
+                for(char i : subNum){
+                    number += i;
+                }
+            }
+            System.out.println(number);
             System.out.print("From base: ");
             int base = in.nextInt();
             System.out.print("To base: ");
