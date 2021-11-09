@@ -125,7 +125,6 @@ public class Main {
                     number += i;
                 }
             }
-            System.out.println(number);
             System.out.print("From base: ");
             int base = in.nextInt();
             System.out.print("To base: ");
